@@ -1,0 +1,39 @@
+Note this is only for dag
+TC->O(N+E)
+SC->O(N{for stack})+O(N{for visited array})+O(N+V{adj list})+O(N{for recursion stack})
+
+void dfs(int i,vector<vector<int>>&adj,vector<int>&vis,stack<int>&st){
+    vis[i]=1;
+    for(auto it:adj[i]){
+        if(vis[it]==0){
+            dfs(it,adj,vis,st);
+        }
+    }
+    st.push(i);
+}
+void solver()
+{
+    int n;
+    cin>>n;
+    vector<vector<int>>adj(n);
+    int m;
+    cin>>m;
+    for(int i=0;i<m;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].push_back(v);
+        // adj[v].push_back(u);
+    }
+    vector<int>vis(n,0);
+    // vector<int>dfs_traversal;
+    stack<int>st;
+    for(int i=0;i<n;i++){
+        if(vis[i]==0){
+            dfs(i,adj,vis,st);
+        }
+    }
+    while(!st.empty()){
+        cout<<st.top()<<endl;
+        st.pop();
+    }
+}
