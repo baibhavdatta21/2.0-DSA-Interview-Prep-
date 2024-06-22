@@ -1,0 +1,149 @@
+TC->Elog(v)
+SP->pq/set/vis
+void dj_conventional_pq(int node,vector<vector<pair<int,int>>>&adj,vector<int>&dist){
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+    pq.push({0,node});
+    dist[0]=0;
+    while(!pq.empty()){
+        auto it=pq.top();
+        pq.pop();
+        int u=it.second;
+        int d=it.first;
+        for(auto it2:adj[u]){
+            int v=it2.first;
+            int w=it2.second;
+            if(dist[v]>dist[u]+w){
+                dist[v]=dist[u]+w;
+                pq.push({dist[v],v});
+            }
+        }
+    }
+}
+void dj_conventional_pq_tc_optimizaion(int node,vector<vector<pair<int,int>>>&adj,vector<int>&dist){
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+    int n=dist.size();
+    vector<int>vis(n,0);//adding visited vector so as to not reiterate on once we receive the node from the top of pq
+    pq.push({0,node});
+    dist[0]=0;
+
+    while(!pq.empty()){
+        auto it=pq.top();
+        pq.pop();
+        int u=it.second;
+        int d=it.first;
+        if(vis[u]==1)
+            continue;
+        vis[u]=1;
+        for(auto it2:adj[u]){
+            int v=it2.first;
+            int w=it2.second;
+            if(dist[v]>dist[u]+w){
+                dist[v]=dist[u]+w;
+                pq.push({dist[v],v});
+            }
+        }
+    }
+}
+void dj_striver_set(int node,vector<vector<pair<int,int>>>&adj,vector<int>&dist){
+    set<pair<int,int>>s;
+    s.insert({0,node});
+    dist[0]=0;
+    while(s.size()>0){
+        auto it=*(s.begin());
+        s.erase(it);
+        int u=it.second;
+        int d=it.first;
+        for(auto it2:adj[u]){
+            int v=it2.first;
+            int w=it2.second;
+            if(dist[v]>dist[u]+w){
+                if(dist[v]!=1e9){
+                    s.erase({dist[v],v});
+                }
+                s.insert({dist[u]+w,v});
+                dist[v]=dist[u]+w;
+                
+            }
+        }
+    }
+}
+void dj_conventional_pq_shortest_path(int node,vector<vector<pair<int,int>>>&adj,vector<int>&dist,vector<int>&path){
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+    pq.push({0,node});
+    dist[0]=0;
+    path[0]=-1;
+    while(!pq.empty()){
+        auto it=pq.top();
+        pq.pop();
+        int u=it.second;
+        int d=it.first;
+        for(auto it2:adj[u]){
+            int v=it2.first;
+            int w=it2.second;
+            if(dist[v]>dist[u]+w){
+                // cout<<u<<v
+                path[v]=u;
+                dist[v]=dist[u]+w;
+                pq.push({dist[v],v});
+            }
+        }
+    }
+    //  for(auto it:path)
+    // {
+    //     cout<<it<<endl;
+    // } 
+
+}
+void solver()
+{
+    int n;
+    cin>>n;
+    vector<vector<pair<int,int>>>adj(n);
+    int m;
+    cin>>m;
+    for(int i=0;i<m;i++){
+        int u,v,w;
+        cin>>u>>v>>w;
+        adj[u].push_back({v,w});
+        adj[v].push_back({u,w});
+    }
+    vector<int>dist(n,1e9);
+    vector<int>path(n,0);
+    // dj_conventional_pq(0,adj,dist);
+    // dj_conventional_pq_tc_optimizaion(0,adj,dist);
+    // dj_striver_set(0,adj,dist);
+    dj_conventional_pq_shortest_path(0,adj,dist,path);
+    for(auto it:dist){
+        cout<<it<<" ";
+    }
+    cout<<endl;
+    for(int i=0;i<n;i++){
+        cout<<"the path for "<<i<<" in reverse order"<<endl;
+        int u=path[i];
+        cout<<u<< " ";
+        while(u!=-1){
+            cout<<path[u]<<" ";
+            u=path[u];
+        }
+        cout<<endl;
+    }
+
+}
+
+signed main()
+{
+    fastIO;
+#ifndef ONLINE_JUDGE
+        freopen("in.txt","r",stdin);
+        freopen("out.txt","w",stdout);
+#endif 
+   
+    int t=1;
+    //cin>>t;
+    //build();
+    while(t--)
+    {
+        solver();
+    }  
+    return 0;
+}
