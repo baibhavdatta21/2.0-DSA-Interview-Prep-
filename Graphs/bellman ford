@@ -1,0 +1,53 @@
+TC->O(V^3)
+SC->O((N){for the distance array})+
+void solver()
+{
+    int n;
+    cin>>n;
+    vector<vector<pair<int,int>>>adj(n);
+    int m;
+    cin>>m;
+    for(int i=0;i<m;i++){
+        int u,v,w;
+        cin>>u>>v>>w;
+        adj[u].push_back({v,w});
+        adj[v].push_back({u,w});
+    }
+    vector<int>dist(n,1e9);
+    dist[0]=0;
+    vector<int>path(n,0);
+    for(int i=0;i<n-1;i++){
+        for(int j=0;j<n;j++){
+            auto it=adj[j];
+            for(int k=0;k<it.size();k++){
+                int v=it[k].first;
+                int w=it[k].second;
+                if(dist[v]>w+dist[j]){
+                    dist[v]=w+dist[j];
+                }
+            }
+        }
+    }
+    for(auto it:dist){
+        cout<<it<<endl;
+    }
+    // dj_conventional_pq(0,adj,dist);
+    // dj_conventional_pq_tc_optimizaion(0,adj,dist);
+    // dj_striver_set(0,adj,dist);
+    // dj_conventional_pq_shortest_path(0,adj,dist,path);
+    // for(auto it:dist){
+    //     cout<<it<<" ";
+    // }
+    // cout<<endl;
+    // for(int i=0;i<n;i++){
+    //     cout<<"the path for "<<i<<" in reverse order"<<endl;
+    //     int u=path[i];
+    //     cout<<u<< " ";
+    //     while(u!=-1){
+    //         cout<<path[u]<<" ";
+    //         u=path[u];
+    //     }
+    //     cout<<endl;
+    // }
+
+}
